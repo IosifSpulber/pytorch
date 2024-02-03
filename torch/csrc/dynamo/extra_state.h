@@ -40,6 +40,7 @@ typedef struct ExtraState {
 
   CacheEntry* get_first_entry();
   void move_to_front(CacheEntry* cache_entry);
+  void invalidate(CacheEntry* cache_entry);
 } ExtraState;
 
 #else

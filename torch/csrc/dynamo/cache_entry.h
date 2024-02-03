@@ -48,6 +48,7 @@ typedef struct CacheEntry {
   std::list<CacheEntry>::iterator _owner_loc;
 
   CacheEntry(const py::handle& guarded_code);
+  ~CacheEntry();
 
   // Warning: returns a reference whose lifetime is controlled by C++
   py::object next();

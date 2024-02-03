@@ -151,6 +151,14 @@ install_centos() {
       fi
   fi
 
+  # ROCm 6.0 had a regression where journal_mode was enabled on the kdb files resulting in permission errors at runtime
+  if [[ $(ver $ROCM_VERSION) -eq $(ver 6.0) ]]; then
+      for kdb in /opt/rocm/share/miopen/db/*.kdb
+      do
+          sudo sqlite3 $kdb "PRAGMA journal_mode=off; PRAGMA VACUUM;"
+      done
+  fi
+
   # Cleanup
   yum clean all
   rm -rf /var/cache/yum

@@ -175,6 +175,7 @@ class FSDPState(_State):
             for handle in self._pre_backward_hook_handles:
                 handle.remove()
             self._pre_backward_hook_handles.clear()
+            self._comm_ctx.post_forward_order.clear()
 
     def _register_pre_backward_hook(self, output: Any) -> Any:
         if not torch.is_grad_enabled():
@@ -185,6 +186,8 @@ class FSDPState(_State):
         if tensors:
             handle = register_multi_grad_hook(tensors, self._pre_backward, mode="any")
             self._pre_backward_hook_handles.append(handle)
+            if self._fsdp_param_group:
+                self._fsdp_param_group.expected_backward_unshard_count += 1
         return output
 
     def _register_root_post_backward_final_callback(self):
